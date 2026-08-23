@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JAOLOVE.STUDIO16</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <!-- Header Bar -->
+    <div class="header">
+        <div class="header-title">
+            <div class="header-circle" onclick="editHeaderIcon()" title="เปลี่ยนรูปไอคอน">
+                <img id="display-header-icon" src="" alt="" style="display: none;">
+            </div>
+            <span id="display-shop-title" class="editable-text" oninput="markUnsaved()">JAOLOVE.STUDIO16</span>
+            <span class="animated-emoji bounce-emoji">✨</span>
+        </div>
+        <button class="mode-btn" id="mode-btn" onclick="toggleMode()">Guest</button>
+    </div>
+
+    <!-- Polaroid Card -->
+    <div class="polaroid-card">
+        <div class="photo-frame" onclick="editPolaroidImage()" title="เปลี่ยนรูปโพลารอยด์">
+            <img id="display-image" src="" alt="" style="display: none;">
+        </div>
+        <div class="polaroid-caption">
+            <div class="handle-text editable-text" id="display-handle" oninput="markUnsaved()">@jaoriche</div>
+            <div class="date-text editable-text" id="display-date" oninput="markUnsaved()">16/02/2000</div>
+        </div>
+    </div>
+
+    <!-- Announcement Box -->
+    <div class="announcement-box">
+        <span class="announcement-badge"><span class="animated-emoji pulse-emoji">🍎</span> สำคัญโปรดอ่าน!!</span>
+        <div class="announcement-text editable-text" id="display-announcement" oninput="markUnsaved()">
+            กำลังโหลดข้อมูล...
+        </div>
+    </div>
+
+    <!-- Review Stats -->
+    <div class="stats-grid">
+        <div class="stat-card olive">
+            <div class="stat-number" id="display-reviews">0</div>
+            <div class="stat-label">จำนวนรีวิวรวม <span class="animated-emoji bounce-emoji">✨</span></div>
+        </div>
+        <div class="stat-card red">
+            <div class="stat-number" id="display-rating">0</div>
+            <div class="stat-label">เฉลี่ยคะแนนดาว <span class="animated-emoji pulse-emoji">🍎</span></div>
+        </div>
+    </div>
+
+    <!-- Rating Interactive Card -->
+    <div class="rating-card" id="rating-card-box">
+        <div class="rating-title editable-text" id="display-rating-title" oninput="markUnsaved()">คะแนนความพึงพอใจ 1 ถึง 5</div>
+        <div class="stars-container" id="stars-container"></div>
+        <button class="next-btn" onclick="openReviewModal()">Next</button>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="reviews-section" id="reviews-section" style="display: none;">
+        <div class="result-title-bar">
+            <span><span class="animated-emoji float-emoji">🍀</span> รีวิวจากคนน่ารักที่มาสั่งงาน <span id="reviews-count-badge">(0)</span> <span class="animated-emoji bounce-emoji">✨</span></span>
+        </div>
+        <div class="reviews-carousel" id="reviews-carousel"></div>
+        <div class="carousel-scrollbar-track" id="scrollbar-track">
+            <div class="carousel-scrollbar-thumb" id="scrollbar-thumb"></div>
+        </div>
+    </div>
+</div>
+<!-- Admin Theme Customizer (แสดงเฉพาะโหมด Admin) -->
+<div class="admin-theme-panel" id="admin-theme-panel">
+    <div class="theme-panel-title"><span class="animated-emoji pulse-emoji">🍎</span> ปรับเปลี่ยนสีส่วนต่างๆ (Color Code)</div>
+    <div class="color-inputs-grid">
+        <div class="color-field">
+            <label>สีพื้นหลังเว็บ:</label>
+            <input type="text" id="color-bg" placeholder="#fcf4e4" oninput="updateThemePreview(); markUnsaved();">
+        </div>
+        <div class="color-field">
+            <label>สี Header/แบนเนอร์:</label>
+            <input type="text" id="color-header" placeholder="#b92b1b" oninput="updateThemePreview(); markUnsaved();">
+        </div>
+        <div class="color-field">
+            <label>สีการ์ดโพลารอยด์:</label>
+            <input type="text" id="color-polaroid" placeholder="#ffffff" oninput="updateThemePreview(); markUnsaved();">
+        </div>
+        <div class="color-field">
+            <label>สีกล่องประกาศ:</label>
+            <input type="text" id="color-announcement" placeholder="rgba(255,255,255,0.4)" oninput="updateThemePreview(); markUnsaved();">
+        </div>
+        <div class="color-field">
+            <label>สีการ์ดจำนวนรีวิว:</label>
+            <input type="text" id="color-olive" placeholder="#c4ca62" oninput="updateThemePreview(); markUnsaved();">
+        </div>
+        <div class="color-field">
+            <label>สีการ์ดเฉลี่ยดาว:</label>
+            <input type="text" id="color-red" placeholder="#b92b1b" oninput="updateThemePreview(); markUnsaved();">
+        </div>
+        <div class="color-field">
+            <label>สีการ์ดความพึงพอใจ:</label>
+            <input type="text" id="color-blue" placeholder="#5b82a6" oninput="updateThemePreview(); markUnsaved();">
+        </div>
+        <div class="color-field">
+            <label>สีฟอนต์ข้อความทั่วไป:</label>
+            <input type="text" id="color-text-main" placeholder="#552718" oninput="updateThemePreview(); markUnsaved();">
+        </div>
+        <div class="color-field">
+            <label>สีฟอนต์ Header:</label>
+            <input type="text" id="color-text-header" placeholder="#ffffff" oninput="updateThemePreview(); markUnsaved();">
+        </div>
+        <div class="color-field">
+            <label>สีกรอบเส้นประประกาศ:</label>
+            <input type="text" id="color-border-announcement" placeholder="#b92b1b" oninput="updateThemePreview(); markUnsaved();">
+        </div>
+        <div class="color-field">
+            <label>สีกรอบรีวิวการ์ด:</label>
+            <input type="text" id="color-border-review" placeholder="#b92b1b" oninput="updateThemePreview(); markUnsaved();">
+        </div>
+    </div>
+</div>
+
+<!-- Floating Admin Save Bar -->
+<div class="admin-save-bar" id="admin-save-bar">
+    <span>มีการแก้ไขข้อมูล</span>
+    <button id="save-btn" onclick="saveData()">บันทึกข้อมูล</button>
+</div>
+
+<!-- Review Popup Modal -->
+<div class="modal-overlay" id="review-modal">
+    <div class="modal-card">
+        <button class="modal-close-btn" onclick="closeReviewModal()">&times;</button>
+        <div class="modal-title-box">
+            <span class="modal-title-main text-green">รีวิว</span><span class="modal-title-main text-blue">ความพึงพอใจ</span> <span class="animated-emoji bounce-emoji">✨</span>
+        </div>
+        <div class="form-group">
+            <label class="form-label editable-text" id="label-name" oninput="markUnsaved()">* ชื่อคนน่ารัก (ใช้นามแฝงได้)</label>
+            <input type="text" class="form-input" id="guest-name" placeholder="พิมพ์ชื่อคนน่ารักตรงนี้...">
+        </div>
+        <div class="form-group">
+            <label class="form-label editable-text" id="label-impression" oninput="markUnsaved()">* ความประทับใจจากคนน่ารัก</label>
+            <textarea class="form-textarea" id="guest-impression" placeholder="บอกเล่าความประทับใจหรือความพึงพอใจสั้นๆ..."></textarea>
+        </div>
+        <div class="form-group">
+            <label class="form-label editable-text" id="label-profile" oninput="markUnsaved()">* รูปโปรไฟล์คนน่ารัก (ไม่บังคับใส่)</label>
+            <div class="profile-picker-box" onclick="triggerGalleryPick()">
+                <img id="user-profile-preview" src="" style="display: none;">
+                <svg id="gallery-placeholder" class="placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="#777" stroke-width="1.5">
+                    <rect x="3" y="3" width="18" height="18" rx="3"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <path d="M21 15l-5-5L5 21"/>
+                </svg>
+            </div>
+            <input type="file" id="user-photo-input" accept="image/*" style="display: none;" onchange="handleImagePick(event)">
+        </div>
+        <button class="submit-review-btn" onclick="submitReview()">ส่งรีวิว <span class="animated-emoji float-emoji">🍀</span></button>
+    </div>
+</div>
+
+<!-- Custom Admin Auth Popup Modal -->
+<div class="modal-overlay" id="admin-auth-modal">
+    <div class="admin-popup-card">
+        <button class="modal-close-btn" onclick="closeAdminAuthModal()">&times;</button>
+        <div class="admin-popup-title" id="admin-popup-title-box">
+            เข้าสู่ระบบ <span class="admin-title-a">A</span><span class="admin-title-d">d</span><span class="admin-title-m">m</span><span class="admin-title-i">i</span><span class="admin-title-n">n</span>
+        </div>
+        <div class="admin-popup-input-wrapper">
+            <input type="password" id="admin-passcode-input" class="admin-popup-input" placeholder="" onkeypress="if(event.key === 'Enter') submitAdminAuth()">
+        </div>
+        <button class="admin-popup-btn" onclick="submitAdminAuth()" id="admin-submit-btn">เข้าสู่ระบบ</button>
+    </div>
+</div>
+
+<!-- Success Message Modal -->
+<div class="modal-overlay" id="success-toast-modal">
+    <div class="success-toast-card">
+        <div class="toast-icon">✨</div>
+        <div class="toast-text" id="toast-message-text">เข้าสู่ระบบสำเร็จ!</div>
+    </div>
+</div>
+  <style>
+    :root {
+        --bg-color: #fcf4e4;
+        --header-bg: #b92b1b;
+        --polaroid-bg: #ffffff;
+        --announcement-bg: rgba(255, 255, 255, 0.4);
+        --card-olive: #c4ca62;
+        --card-red: #b92b1b;
+        --card-blue: #5b82a6;
+        --text-dark: #4a3b32;
+        --text-main: #552718;
+        --text-header: #ffffff;
+        --border-announcement: #b92b1b;
+        --border-review: #b92b1b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Kanit', sans-serif !important; }
+
+    body {
+        background-color: var(--bg-color);
+        display: flex; flex-direction: column; align-items: center;
+        min-height: 100vh; padding-bottom: 120px; transition: background-color 0.3s;
+    }
+
+    .container {
+        width: 100%; max-width: 420px;
+        background-color: var(--bg-color); min-height: 100vh;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1); position: relative; transition: background-color 0.3s;
+    }
+
+    /* Animated Emoji */
+    .animated-emoji { display: inline-block; font-style: normal; }
+    .bounce-emoji { animation: emojiBounce 1.5s infinite ease-in-out; }
+    .pulse-emoji { animation: emojiPulse 1.2s infinite ease-in-out; }
+    .float-emoji { animation: emojiFloat 2s infinite ease-in-out; }
+
+    @keyframes emojiBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+    @keyframes emojiPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.25); } }
+    @keyframes emojiFloat { 0%, 100% { transform: rotate(0deg) translateY(0); } 50% { transform: rotate(10deg) translateY(-3px); } }
+
+    /* Header Bar */
+    .header {
+        background-color: var(--header-bg); padding: 15px 20px;
+        display: flex; justify-content: space-between; align-items: center;
+        color: var(--text-header); transition: background-color 0.3s, color 0.3s;
+    }
+    .header-title { font-size: 1.2rem; font-weight: 700; font-style: italic; display: flex; align-items: center; gap: 10px; color: var(--text-header); }
+    .header-circle { width: 36px; height: 36px; background-color: var(--card-olive); border-radius: 50%; overflow: hidden; display: flex; justify-content: center; align-items: center; flex-shrink: 0; position: relative; }
+    .header-circle img { width: 100%; height: 100%; object-fit: cover; }
+
+    body.is-admin .header-circle, body.is-admin .photo-frame { cursor: pointer; outline: 2px dashed #b92b1b; outline-offset: 1px; position: relative; }
+    body.is-admin .header-circle { outline-color: #ffffff; }
+    body.is-admin .header-circle::after, body.is-admin .photo-frame::after {
+        content: "📷 เปลี่ยนรูปภาพ"; position: absolute; inset: 0;
+        background: rgba(0, 0, 0, 0.45); color: white; display: flex;
+        align-items: center; justify-content: center; font-size: 12px; font-weight: 600; opacity: 0; transition: opacity 0.2s;
+    }
+    body.is-admin .photo-frame::after { font-size: 16px; }
+    body.is-admin .header-circle:hover::after, body.is-admin .photo-frame:hover::after { opacity: 1; }
+
+    .editable-text { outline: none; transition: background 0.2s, padding 0.2s, box-shadow 0.2s; border-radius: 4px; }
+    body.is-admin .editable-text { cursor: text; background-color: rgba(255, 255, 255, 0.2); padding: 2px 6px; }
+    .header .editable-text { color: var(--text-header); }
+    body.is-admin .editable-text:hover, body.is-admin .editable-text:focus { background-color: rgba(255, 255, 255, 0.35); box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8); }
+
+    /* Polaroid */
+    .polaroid-card { background: var(--polaroid-bg); margin: 25px 20px 15px 20px; padding: 15px 15px 20px 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-radius: 4px; transition: background-color 0.3s; }
+    .photo-frame { width: 100%; aspect-ratio: 1 / 1; background-color: var(--card-olive); display: flex; justify-content: center; align-items: center; overflow: hidden; }
+    .photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+    .polaroid-caption { text-align: right; margin-top: 10px; color: var(--text-main); display: flex; flex-direction: column; align-items: flex-end; }
+    .handle-text { font-size: 1.5rem; font-weight: 700; line-height: 1; color: var(--text-main); }
+    .date-text { font-size: 0.75rem; font-weight: 600; margin-top: 4px; color: var(--text-main); }
+
+    /* Announcement */
+    .announcement-box { margin: 0 20px 20px 20px; border: 2px dashed var(--border-announcement); border-radius: 15px; padding: 12px 15px; position: relative; background-color: var(--announcement-bg); transition: background-color 0.3s, border-color 0.3s; }
+    .announcement-badge { background-color: #5b82a6; color: white; display: inline-block; padding: 4px 15px; border-radius: 15px; font-size: 0.85rem; font-weight: 600; margin-bottom: 10px; }
+    .announcement-text { color: var(--text-main); font-size: 0.82rem; line-height: 1.4; text-align: center; font-weight: 500; }
+
+    /* Stats */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 0 20px 20px 20px; }
+    .stat-card { border-radius: 15px; padding: 12px; text-align: center; color: white; transition: background-color 0.3s; }
+    .stat-card.olive { background-color: var(--card-olive); color: var(--text-main); }
+    .stat-card.red { background-color: var(--card-red); }
+    .stat-number { font-size: 2.2rem; font-weight: 700; font-style: italic; line-height: 1; margin-bottom: 5px; }
+    .stat-label { font-size: 0.85rem; font-weight: 600; }
+
+    /* Rating Card */
+    .rating-card { background-color: var(--card-blue); margin: 0 20px 20px 20px; border-radius: 20px; padding: 20px; text-align: center; color: white; transition: background-color 0.3s; }
+    .rating-card.thankyou-state { background-color: #ffffff; border: 2.5px solid #5b82a6; border-radius: 25px; padding: 35px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+    .thankyou-heart-circle { width: 70px; height: 70px; background-color: #b92b1b; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-bottom: 18px; box-shadow: 0 4px 8px rgba(185, 43, 27, 0.2); }
+    .thankyou-heart-circle svg { width: 36px; height: 36px; fill: white; }
+    .thankyou-text { color: var(--text-main); font-size: 1.25rem; font-weight: 700; font-style: italic; letter-spacing: 0.2px; }
+
+    /* Reviews Section */
+    .reviews-section { margin: 0 20px 20px 20px; }
+    .result-title-bar { font-size: 1.1rem; font-weight: 800; font-style: italic; margin-bottom: 10px; color: var(--text-main); }
+    .reviews-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 15px; padding-bottom: 10px; scrollbar-width: none; -ms-overflow-style: none; }
+    .reviews-carousel::-webkit-scrollbar { display: none; }
+    .carousel-scrollbar-track { width: 100%; height: 12px; background-color: #e2e8f0; border-radius: 10px; margin-top: 8px; position: relative; cursor: pointer; overflow: hidden; }
+    .carousel-scrollbar-thumb { height: 100%; width: 30%; background-color: var(--card-olive); border-radius: 10px; position: absolute; top: 0; left: 0; cursor: grab; transition: background-color 0.3s; }
+    .carousel-scrollbar-thumb:active { cursor: grabbing; }
+
+    .review-item-card { flex: 0 0 100%; scroll-snap-align: start; box-sizing: border-box; }
+    .result-box { background: #ffffff; border: 2px dashed var(--border-review); border-radius: 20px; padding: 16px 18px; position: relative; transition: border-color 0.3s; }
+    .result-delete-btn { position: absolute; top: 12px; right: 12px; width: 26px; height: 26px; background-color: #b92b1b; color: white; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: bold; cursor: pointer; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    body.is-admin .result-delete-btn { display: flex; }
+    .result-stars { display: flex; gap: 4px; margin-bottom: 12px; }
+    .result-stars svg { width: 26px; height: 26px; }
+    .result-comment { font-size: 0.92rem; line-height: 1.4; color: var(--text-main); font-weight: 600; margin-bottom: 15px; word-break: break-word; }
+    .result-divider { height: 1px; background-color: #eee; margin-bottom: 12px; }
+    .result-user-info { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .result-user-left { display: flex; align-items: center; gap: 12px; }
+    .result-avatar { width: 45px; height: 45px; border-radius: 50%; overflow: hidden; background-color: #f0f0f0; flex-shrink: 0; border: 1px solid #eee; }
+    .result-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .result-user-details { display: flex; flex-direction: column; }
+    .result-user-name { font-size: 1.1rem; font-weight: 800; font-style: italic; color: var(--text-main); line-height: 1.1; }
+    .result-user-time { font-size: 0.72rem; color: #aaa; font-style: italic; margin-top: 3px; }
+
+    .heart-like-btn { display: flex; align-items: center; gap: 4px; background: #fff0f0; border: 1px solid #ffccd5; border-radius: 15px; padding: 4px 10px; cursor: pointer; user-select: none; transition: transform 0.15s ease, background-color 0.2s; }
+    .heart-like-btn:active { transform: scale(0.9); }
+    .heart-like-btn svg { width: 18px; height: 18px; fill: #ccc; transition: fill 0.2s, transform 0.2s; }
+    .heart-like-btn.liked { background: #ffe5e8; border-color: #ff4d6d; }
+    .heart-like-btn.liked svg { fill: #ff4d6d; transform: scale(1.1); }
+    .heart-count { font-size: 0.8rem; font-weight: 700; color: var(--text-main); }
+
+    .rating-title { font-size: 1.15rem; font-weight: 600; font-style: italic; margin-bottom: 15px; letter-spacing: 0.5px; display: inline-block; }
+    .stars-container { display: flex; justify-content: center; gap: 8px; margin-bottom: 18px; }
+    .star-icon { width: 44px; height: 44px; cursor: pointer; transition: transform 0.1s ease; }
+    .star-icon:hover { transform: scale(1.1); }
+    .star-icon svg { width: 100%; height: 100%; filter: drop-shadow(0px 2px 0px #8b1b1b); }
+
+    .next-btn { background-color: var(--card-olive); color: var(--text-main); border: 3px solid white; border-radius: 30px; padding: 6px 45px; font-size: 1.1rem; font-weight: 600; font-style: italic; cursor: pointer; box-shadow: 0 3px 6px rgba(0,0,0,0.15); transition: background-color 0.2s, transform 0.1s; }
+    .next-btn:active { transform: scale(0.96); }
+
+    .mode-btn { background-color: white; color: var(--text-dark); border: none; padding: 4px 16px; border-radius: 20px; font-weight: 600; cursor: pointer; font-size: 0.9rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+    /* Admin Theme Control Panel */
+    .admin-theme-panel { display: none; width: 100%; max-width: 420px; background: #ffffff; border: 2px solid #b92b1b; border-radius: 20px; padding: 15px; margin-top: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    body.is-admin .admin-theme-panel { display: block; }
+    .theme-panel-title { font-weight: 700; font-size: 0.95rem; color: #b92b1b; margin-bottom: 10px; text-align: center; }
+    .color-inputs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .color-field { display: flex; flex-direction: column; }
+    .color-field label { font-size: 0.72rem; font-weight: 600; color: #552718; margin-bottom: 2px; }
+    .color-field input { border: 1px solid #ccc; border-radius: 6px; padding: 4px 8px; font-size: 0.8rem; outline: none; }
+
+    /* Floating Admin Save Bar */
+    .admin-save-bar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: var(--header-bg); color: white; padding: 10px 25px; border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: none; align-items: center; gap: 15px; z-index: 1000; }
+    .admin-save-bar button { background-color: white; color: var(--header-bg); border: none; padding: 6px 18px; border-radius: 20px; font-weight: 700; cursor: pointer; }
+
+    /* Popup Modal Base */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); display: none; justify-content: center; align-items: center; z-index: 2000; padding: 20px; }
+    .modal-overlay.active { display: flex; }
+
+    .modal-card { background: #fdfbf7; border: 2px dashed #b92b1b; border-radius: 25px; width: 100%; max-width: 360px; padding: 25px 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; animation: modalPop 0.25s ease-out; }
+    @keyframes modalPop { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+    .modal-close-btn { position: absolute; top: 8px; right: 14px; background: none; border: none; font-size: 1.5rem; color: #b92b1b; cursor: pointer; font-weight: bold; }
+
+    .modal-title-box { text-align: center; margin-bottom: 20px; }
+    .modal-title-main { font-size: 1.6rem; font-weight: 800; font-style: italic; }
+    .text-green { color: #cbd561; }
+    .text-blue { color: #5b82a6; }
+
+    .form-group { margin-bottom: 16px; }
+    .form-label { font-size: 0.9rem; font-weight: 700; color: #b92b1b; font-style: italic; margin-bottom: 6px; display: block; }
+    .form-input, .form-textarea { width: 100%; border: 1.5px solid #b92b1b; border-radius: 12px; padding: 10px 14px; font-size: 0.88rem; background: white; color: #4a3b32; outline: none; }
+    .form-textarea { border-color: #cbd561; height: 90px; resize: none; }
+
+    .profile-picker-box { width: 110px; height: 110px; border: 2px solid #5b82a6; border-radius: 20px; display: flex; justify-content: center; align-items: center; cursor: pointer; background: white; overflow: hidden; position: relative; }
+    .profile-picker-box img { width: 100%; height: 100%; object-fit: cover; }
+    .profile-picker-box .placeholder-icon { width: 45px; opacity: 0.35; }
+
+    .submit-review-btn { display: block; margin: 20px auto 0 auto; background-color: #b92b1b; color: white; border: none; padding: 8px 35px; border-radius: 25px; font-size: 1.1rem; font-weight: 700; font-style: italic; cursor: pointer; box-shadow: 0 3px 6px rgba(0,0,0,0.15); }
+    .submit-review-btn:active { transform: scale(0.96); }
+
+    /* CUSTOM ADMIN LOGIN POPUP */
+    .admin-popup-card {
+        background: #ffffff;
+        border: 3.5px dashed #b92b1b;
+        border-radius: 35px;
+        width: 100%;
+        max-width: 380px;
+        padding: 30px 25px 25px 25px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        position: relative;
+        text-align: center;
+        animation: modalPop 0.25s ease-out;
+    }
+
+    .admin-popup-title {
+        font-size: 1.8rem;
+        font-weight: 800;
+        font-style: italic;
+        color: #6a3928;
+        margin-bottom: 22px;
+        letter-spacing: 0.5px;
+    }
+
+    .admin-title-a { color: #b92b1b; }
+    .admin-title-d { color: #f4a261; }
+    .admin-title-m { color: #e76f51; }
+    .admin-title-i { color: #2a9d8f; }
+    .admin-title-n { color: #6a3928; }
+
+    .admin-popup-input-wrapper { margin-bottom: 20px; }
+
+    .admin-popup-input {
+        width: 100%;
+        height: 50px;
+        border: 1.8px solid #fce8bd;
+        border-radius: 25px;
+        padding: 0 20px;
+        font-size: 1.2rem;
+        text-align: center;
+        color: #4a3b32;
+        outline: none;
+        background-color: #ffffff;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.03);
+        transition: border-color 0.2s;
+    }
+
+    .admin-popup-input:focus { border-color: #c4ca62; }
+
+    .admin-popup-btn {
+        background-color: #cbd561;
+        color: #ffffff;
+        border: none;
+        border-radius: 25px;
+        padding: 10px 42px;
+        font-size: 1.15rem;
+        font-weight: 700;
+        font-style: italic;
+        cursor: pointer;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+        transition: transform 0.1s, background-color 0.2s;
+    }
+
+    .admin-popup-btn:active {
+        transform: scale(0.95);
+        background-color: #b5bf4d;
+    }
+
+    /* Success Toast Alert */
+    .success-toast-card {
+        background: #ffffff;
+        border: 2px solid #cbd561;
+        border-radius: 25px;
+        padding: 20px 30px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        animation: modalPop 0.2s ease-out;
+    }
+
+    .toast-icon { font-size: 1.5rem; }
+    .toast-text { font-size: 1.1rem; font-weight: 700; color: #552718; }
+  </style>
+  <script>
+    let currentMode = 'Guest';
+    let userRating = 5;
+    const PASSCODE = '160243';
+    const FIREBASE_BASE_URL = 'https://test-kiki16-default-rtdb.firebaseio.com';
+    const FIREBASE_URL = `${FIREBASE_BASE_URL}/templateData.json`;
+    const REVIEWS_URL = `${FIREBASE_BASE_URL}/reviewsData.json`;
+
+    let currentRawHeaderIconUrl = '';
+    let currentRawImageUrl = '';
+    let userProfileBase64 = '';
+    let reviewsList = [];
+    let pendingDeleteReviewId = null;
+    let authTargetAction = 'login'; 
+
+    let themeColors = {
+        bg: '#fcf4e4',
+        header: '#b92b1b',
+        polaroid: '#ffffff',
+        announcement: 'rgba(255, 255, 255, 0.4)',
+        olive: '#c4ca62',
+        red: '#b92b1b',
+        blue: '#5b82a6',
+        textMain: '#552718',
+        textHeader: '#ffffff',
+        borderAnnouncement: '#b92b1b',
+        borderReview: '#b92b1b'
+    };
+
+    function applyThemeColors() {
+        const root = document.documentElement;
+        if (themeColors.bg) root.style.setProperty('--bg-color', themeColors.bg);
+        if (themeColors.header) root.style.setProperty('--header-bg', themeColors.header);
+        if (themeColors.polaroid) root.style.setProperty('--polaroid-bg', themeColors.polaroid);
+        if (themeColors.announcement) root.style.setProperty('--announcement-bg', themeColors.announcement);
+        if (themeColors.olive) root.style.setProperty('--card-olive', themeColors.olive);
+        if (themeColors.red) root.style.setProperty('--card-red', themeColors.red);
+        if (themeColors.blue) root.style.setProperty('--card-blue', themeColors.blue);
+        if (themeColors.textMain) root.style.setProperty('--text-main', themeColors.textMain);
+        if (themeColors.textHeader) root.style.setProperty('--text-header', themeColors.textHeader);
+        if (themeColors.borderAnnouncement) root.style.setProperty('--border-announcement', themeColors.borderAnnouncement);
+        if (themeColors.borderReview) root.style.setProperty('--border-review', themeColors.borderReview);
+    }
+
+    function updateThemePreview() {
+        themeColors.bg = document.getElementById('color-bg').value || themeColors.bg;
+        themeColors.header = document.getElementById('color-header').value || themeColors.header;
+        themeColors.polaroid = document.getElementById('color-polaroid').value || themeColors.polaroid;
+        themeColors.announcement = document.getElementById('color-announcement').value || themeColors.announcement;
+        themeColors.olive = document.getElementById('color-olive').value || themeColors.olive;
+        themeColors.red = document.getElementById('color-red').value || themeColors.red;
+        themeColors.blue = document.getElementById('color-blue').value || themeColors.blue;
+        themeColors.textMain = document.getElementById('color-text-main').value || themeColors.textMain;
+        themeColors.textHeader = document.getElementById('color-text-header').value || themeColors.textHeader;
+        themeColors.borderAnnouncement = document.getElementById('color-border-announcement').value || themeColors.borderAnnouncement;
+        themeColors.borderReview = document.getElementById('color-border-review').value || themeColors.borderReview;
+        applyThemeColors();
+    }
+
+    function initCustomScrollbar() {
+        const carousel = document.getElementById('reviews-carousel');
+        const track = document.getElementById('scrollbar-track');
+        const thumb = document.getElementById('scrollbar-thumb');
+
+        if (!carousel || !track || !thumb) return;
+
+        function updateThumb() {
+            const scrollWidth = carousel.scrollWidth;
+            const clientWidth = carousel.clientWidth;
+            if (scrollWidth <= clientWidth) {
+                thumb.style.width = '100%';
+                thumb.style.left = '0px';
+                return;
+            }
+            const ratio = clientWidth / scrollWidth;
+            const thumbWidth = Math.max(ratio * track.clientWidth, 30);
+            thumb.style.width = `${thumbWidth}px`;
+
+            const scrollRatio = carousel.scrollLeft / (scrollWidth - clientWidth);
+            const maxLeft = track.clientWidth - thumbWidth;
+            thumb.style.left = `${scrollRatio * maxLeft}px`;
+        }
+
+        carousel.addEventListener('scroll', updateThumb);
+        window.addEventListener('resize', updateThumb);
+
+        let isDragging = false;
+        let startX = 0;
+        let startLeft = 0;
+
+        thumb.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX;
+            startLeft = parseFloat(thumb.style.left || '0');
+            document.body.style.userSelect = 'none';
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            const deltaX = e.clientX - startX;
+            const maxLeft = track.clientWidth - thumb.offsetWidth;
+            let newLeft = Math.min(Math.max(0, startLeft + deltaX), maxLeft);
+            thumb.style.left = `${newLeft}px`;
+
+            const scrollRatio = newLeft / maxLeft;
+            carousel.scrollLeft = scrollRatio * (carousel.scrollWidth - carousel.clientWidth);
+        });
+
+        window.addEventListener('mouseup', () => {
+            isDragging = false;
+            document.body.style.userSelect = '';
+        });
+
+        track.addEventListener('click', (e) => {
+            if (e.target === thumb) return;
+            const rect = track.getBoundingClientRect();
+            const clickPos = e.clientX - rect.left;
+            const ratio = clickPos / track.clientWidth;
+            carousel.scrollLeft = ratio * (carousel.scrollWidth - carousel.clientWidth);
+        });
+
+        setTimeout(updateThumb, 200);
+    }
+
+    function getStarSvg(isFilled, color = '#FFD700', stroke = '#8b1b1b') {
+        const fillColor = isFilled ? color : '#FFFFFF';
+        return `
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" 
+                      fill="${fillColor}" stroke="${stroke}" stroke-width="1.8" 
+                      stroke-linejoin="round" stroke-linecap="round"/>
+            </svg>
+        `;
+    }
+
+    function renderStars() {
+        const container = document.getElementById('stars-container');
+        if (!container) return;
+        container.innerHTML = '';
+        for (let i = 1; i <= 5; i++) {
+            const starDiv = document.createElement('div');
+            starDiv.className = 'star-icon';
+            starDiv.innerHTML = getStarSvg(i <= userRating);
+            starDiv.onclick = () => {
+                userRating = i;
+                renderStars();
+            };
+            container.appendChild(starDiv);
+        }
+    }
+
+    function openReviewModal() { document.getElementById('review-modal').classList.add('active'); }
+    function closeReviewModal() { document.getElementById('review-modal').classList.remove('active'); }
+    function triggerGalleryPick() { document.getElementById('user-photo-input').click(); }
+
+    function handleImagePick(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const MAX_WIDTH = 200;
+                    const MAX_HEIGHT = 200;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                    } else {
+                        if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    userProfileBase64 = canvas.toDataURL('image/jpeg', 0.8);
+                    const previewImg = document.getElementById('user-profile-preview');
+                    const placeholder = document.getElementById('gallery-placeholder');
+                    previewImg.src = userProfileBase64;
+                    previewImg.style.display = 'block';
+                    placeholder.style.display = 'none';
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function getBlueStarsSvg(ratingCount) {
+        let starsHtml = '';
+        for (let i = 1; i <= 5; i++) {
+            const isFilled = i <= ratingCount;
+            const fillColor = isFilled ? '#5b82a6' : '#ffffff';
+            starsHtml += `
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" 
+                          fill="${fillColor}" stroke="#5b82a6" stroke-width="1.8" 
+                          stroke-linejoin="round" stroke-linecap="round"/>
+                </svg>
+            `;
+        }
+        return starsHtml;
+    }
+
+    function updateReviewStats() {
+        const total = reviewsList.length;
+        document.getElementById('display-reviews').innerText = total;
+
+        if (total > 0) {
+            const sumStars = reviewsList.reduce((acc, curr) => acc + (Number(curr.rating) || 5), 0);
+            const avg = (sumStars / total).toFixed(1);
+            document.getElementById('display-rating').innerText = avg;
+        } else {
+            document.getElementById('display-rating').innerText = '0';
+        }
+    }
+
+    function renderReviewsCarousel() {
+        const section = document.getElementById('reviews-section');
+        const carousel = document.getElementById('reviews-carousel');
+        const countBadge = document.getElementById('reviews-count-badge');
+
+        if (!section || !carousel) return;
+
+        if (reviewsList.length === 0) {
+            section.style.display = 'none';
+            return;
+        }
+
+        section.style.display = 'block';
+        countBadge.innerText = `(${reviewsList.length})`;
+
+        carousel.innerHTML = reviewsList.map((item) => {
+            const avatarImgSrc = item.avatar || 'https://via.placeholder.com/150';
+            const displayName = item.name.startsWith('@') ? item.name : `@${item.name}`;
+            const likesCount = item.likes || 0;
+            const isLiked = localStorage.getItem(`liked_${item.id}`) === 'true';
+
+            return `
+                <div class="review-item-card" id="review-card-${item.id}">
+                    <div class="result-box">
+                        <div class="result-delete-btn" onclick="deleteReview('${item.id}')" title="ลบรีวิว">✕</div>
+                        <div class="result-stars">
+                            ${getBlueStarsSvg(item.rating)}
+                        </div>
+                        <div class="result-comment">
+                            ${item.impression || 'ขอบคุณสำหรับงานน่ารักๆ นะคะ ประทับใจมากค่ะ ❤️'}
+                        </div>
+                        <div class="result-divider"></div>
+                        <div class="result-user-info">
+                            <div class="result-user-left">
+                                <div class="result-avatar">
+                                    <img src="${avatarImgSrc}" alt="profile">
+                                </div>
+                                <div class="result-user-details">
+                                    <span class="result-user-name">${displayName}</span>
+                                    <span class="result-user-time">${item.dateTime}</span>
+                                </div>
+                            </div>
+                            <div class="heart-like-btn ${isLiked ? 'liked' : ''}" onclick="toggleLikeReview('${item.id}')" id="like-btn-${item.id}">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                </svg>
+                                <span class="heart-count" id="like-count-${item.id}">${likesCount}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        initCustomScrollbar();
+    }
+        async function submitReview() {
+        const name = document.getElementById('guest-name').value.trim();
+        const impression = document.getElementById('guest-impression').value.trim();
+
+        if (!name) {
+            showToast('กรุณากรอกชื่อคนน่ารักด้วยนะคะ');
+            return;
+        }
+
+        const now = new Date();
+        const day = String(now.getDate()).padStart(2, '0');
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const year = now.getFullYear();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const formattedDateTime = `${day}/${month}/${year} ${hours}:${minutes} น.`;
+
+        closeReviewModal();
+
+        const ratingCard = document.getElementById('rating-card-box');
+        ratingCard.className = 'rating-card thankyou-state';
+        ratingCard.innerHTML = `
+            <div class="thankyou-heart-circle">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+            </div>
+            <div class="thankyou-text">ขอบคุณสำหรับรีวิวความพึงพอใจงับ <span class="animated-emoji bounce-emoji">✨</span></div>
+        `;
+
+        const tempId = 'temp_' + Date.now();
+        const newReviewData = {
+            id: tempId,
+            name: name,
+            impression: impression,
+            rating: userRating,
+            avatar: userProfileBase64 || 'https://via.placeholder.com/150',
+            dateTime: formattedDateTime,
+            timestamp: Date.now(),
+            likes: 0
+        };
+
+        reviewsList.unshift(newReviewData);
+        updateReviewStats();
+        renderReviewsCarousel();
+
+        const carousel = document.getElementById('reviews-carousel');
+        if (carousel) carousel.scrollLeft = 0;
+
+        document.getElementById('guest-name').value = '';
+        document.getElementById('guest-impression').value = '';
+        document.getElementById('user-profile-preview').style.display = 'none';
+        document.getElementById('gallery-placeholder').style.display = 'block';
+        userProfileBase64 = '';
+
+        try {
+            const payload = {
+                name: newReviewData.name,
+                impression: newReviewData.impression,
+                rating: newReviewData.rating,
+                avatar: newReviewData.avatar,
+                dateTime: newReviewData.dateTime,
+                timestamp: newReviewData.timestamp,
+                likes: 0
+            };
+            const res = await fetch(REVIEWS_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+            if (data && data.name) {
+                newReviewData.id = data.name;
+            }
+        } catch (e) {
+            console.error('Error saving review to Firebase:', e);
+        }
+
+        setTimeout(() => {
+            resetRatingCard();
+        }, 1500);
+    }
+
+    function openAdminAuthModal(action = 'login', reviewId = null) {
+        authTargetAction = action;
+        pendingDeleteReviewId = reviewId;
+
+        const titleBox = document.getElementById('admin-popup-title-box');
+        const submitBtn = document.getElementById('admin-submit-btn');
+        const inputField = document.getElementById('admin-passcode-input');
+
+        inputField.value = '';
+
+        if (action === 'delete') {
+            titleBox.innerHTML = 'ยืนยันรหัสลบ <span class="admin-title-a">A</span><span class="admin-title-d">d</span><span class="admin-title-m">m</span><span class="admin-title-i">i</span><span class="admin-title-n">n</span>';
+            submitBtn.innerText = 'ยืนยันลบ';
+        } else {
+            titleBox.innerHTML = 'เข้าสู่ระบบ <span class="admin-title-a">A</span><span class="admin-title-d">d</span><span class="admin-title-m">m</span><span class="admin-title-i">i</span><span class="admin-title-n">n</span>';
+            submitBtn.innerText = 'เข้าสู่ระบบ';
+        }
+
+        document.getElementById('admin-auth-modal').classList.add('active');
+        setTimeout(() => inputField.focus(), 100);
+    }
+
+    function closeAdminAuthModal() {
+        document.getElementById('admin-auth-modal').classList.remove('active');
+        pendingDeleteReviewId = null;
+    }
+
+    function showToast(msg) {
+        const toast = document.getElementById('success-toast-modal');
+        document.getElementById('toast-message-text').innerText = msg;
+        toast.classList.add('active');
+        setTimeout(() => {
+            toast.classList.remove('active');
+        }, 1800);
+    }
+
+    function submitAdminAuth() {
+        const pass = document.getElementById('admin-passcode-input').value;
+
+        if (pass === PASSCODE) {
+            closeAdminAuthModal();
+            
+            if (authTargetAction === 'login') {
+                currentMode = 'Admin';
+                document.body.classList.add('is-admin');
+                document.getElementById('mode-btn').innerText = 'Admin';
+                document.querySelectorAll('.editable-text').forEach(el => el.contentEditable = "true");
+                showToast("เข้าสู่ระบบสำเร็จ!");
+            } else if (authTargetAction === 'delete' && pendingDeleteReviewId) {
+                executeDeleteReview(pendingDeleteReviewId);
+                showToast("ลบรีวิวเรียบร้อยแล้ว!");
+            }
+        } else {
+            showToast("รหัสผ่านไม่ถูกต้อง!");
+        }
+    }
+
+    function toggleMode() {
+        if (currentMode === 'Guest') {
+            openAdminAuthModal('login');
+        } else {
+            currentMode = 'Guest';
+            document.body.classList.remove('is-admin');
+            document.getElementById('mode-btn').innerText = 'Guest';
+            document.getElementById('admin-save-bar').style.display = 'none';
+            document.querySelectorAll('.editable-text').forEach(el => el.contentEditable = "false");
+        }
+    }
+
+    function deleteReview(reviewId) {
+        openAdminAuthModal('delete', reviewId);
+                   }
+        /* === ฟังก์ชันลบการ์ดที่แก้ไขแล้ว === */
+    async function executeDeleteReview(reviewId) {
+        try {
+            // 1. ตัดออกจากอาร์เรย์ในหน่วยความจำก่อน
+            reviewsList = reviewsList.filter(item => item.id !== reviewId);
+            
+            // 2. คำนวณสถิติคะแนนและจำนวนรีวิวใหม่
+            updateReviewStats();
+            
+            // 3. วาดการ์ด Carousel ใหม่ (การ์ดที่ลบจะหายไปทันที)
+            renderReviewsCarousel();
+
+            // 4. ส่งคำสั่งลบข้อมูลบน Firebase
+            if (!reviewId.startsWith('temp_')) {
+                const deleteUrl = `${FIREBASE_BASE_URL}/reviewsData/${reviewId}.json`;
+                await fetch(deleteUrl, { method: 'DELETE' });
+            }
+        } catch (err) {
+            console.error('Error deleting review:', err);
+        }
+    }
+
+    function resetRatingCard() {
+        const ratingCard = document.getElementById('rating-card-box');
+        if (!ratingCard) return;
+        ratingCard.className = 'rating-card';
+        ratingCard.innerHTML = `
+            <div class="rating-title editable-text" id="display-rating-title" oninput="markUnsaved()">คะแนนความพึงพอใจ 1 ถึง 5</div>
+            <div class="stars-container" id="stars-container"></div>
+            <button class="next-btn" onclick="openReviewModal()">Next</button>
+        `;
+        userRating = 5;
+        renderStars();
+    }
+
+    function convertDriveLink(url) {
+        if (!url) return '';
+        url = url.trim();
+        if (url.includes('drive.google.com')) {
+            let fileId = '';
+            const match1 = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+            if (match1 && match1[1]) fileId = match1[1];
+            else {
+                const match2 = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+                if (match2 && match2[1]) fileId = match2[1];
+            }
+            if (fileId) return `https://lh3.googleusercontent.com/d/${fileId}`;
+        }
+        return url;
+    }
+
+    function editHeaderIcon() {
+        if (currentMode !== 'Admin') return;
+        const newUrl = prompt("วางลิงก์รูปภาพ Google Drive สำหรับไอคอนร้าน:", currentRawHeaderIconUrl);
+        if (newUrl !== null && newUrl.trim() !== '') {
+            currentRawHeaderIconUrl = newUrl.trim();
+            const converted = convertDriveLink(currentRawHeaderIconUrl);
+            const imgEl = document.getElementById('display-header-icon');
+            imgEl.src = converted;
+            imgEl.style.display = 'block';
+            markUnsaved();
+        }
+    }
+
+    function editPolaroidImage() {
+        if (currentMode !== 'Admin') return;
+        const newUrl = prompt("วางลิงก์รูปภาพ Google Drive สำหรับรูปโพลารอยด์:", currentRawImageUrl);
+        if (newUrl !== null && newUrl.trim() !== '') {
+            currentRawImageUrl = newUrl.trim();
+            const converted = convertDriveLink(currentRawImageUrl);
+            const imgEl = document.getElementById('display-image');
+            imgEl.src = converted;
+            imgEl.style.display = 'block';
+            markUnsaved();
+        }
+    }
+
+    function markUnsaved() {
+        if (currentMode === 'Admin') {
+            document.getElementById('admin-save-bar').style.display = 'flex';
+        }
+    }
+
+    async function fetchReviews() {
+        try {
+            const res = await fetch(REVIEWS_URL);
+            const data = await res.json();
+            reviewsList = [];
+            if (data) {
+                Object.keys(data).forEach(key => {
+                    reviewsList.push({
+                        id: key,
+                        ...data[key]
+                    });
+                });
+                reviewsList.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            }
+            updateReviewStats();
+            renderReviewsCarousel();
+        } catch (e) {
+            console.error('Error fetching reviews:', e);
+        }
+    }
+
+    async function loadData() {
+        try {
+            const response = await fetch(FIREBASE_URL);
+            const data = await response.json();
+
+            if (data) {
+                document.getElementById('display-shop-title').innerText = data.shopTitle || 'JAOLOVE.STUDIO16';
+                document.getElementById('display-handle').innerText = data.handle || '@jaoriche';
+                document.getElementById('display-date').innerText = data.date || '16/02/2000';
+                document.getElementById('display-announcement').innerText = data.announcement || '';
+                
+                const ratingTitleEl = document.getElementById('display-rating-title');
+                if (ratingTitleEl) ratingTitleEl.innerText = data.ratingTitle || 'คะแนนความพึงพอใจ 1 ถึง 5';
+
+                if (data.labelName) document.getElementById('label-name').innerText = data.labelName;
+                if (data.labelImpression) document.getElementById('label-impression').innerText = data.labelImpression;
+                if (data.labelProfile) document.getElementById('label-profile').innerText = data.labelProfile;
+
+                if (data.themeColors) {
+                    themeColors = { ...themeColors, ...data.themeColors };
+                    applyThemeColors();
+                    
+                    document.getElementById('color-bg').value = themeColors.bg || '';
+                    document.getElementById('color-header').value = themeColors.header || '';
+                    document.getElementById('color-polaroid').value = themeColors.polaroid || '';
+                    document.getElementById('color-announcement').value = themeColors.announcement || '';
+                    document.getElementById('color-olive').value = themeColors.olive || '';
+                    document.getElementById('color-red').value = themeColors.red || '';
+                    document.getElementById('color-blue').value = themeColors.blue || '';
+                    document.getElementById('color-text-main').value = themeColors.textMain || '';
+                    document.getElementById('color-text-header').value = themeColors.textHeader || '';
+                    document.getElementById('color-border-announcement').value = themeColors.borderAnnouncement || '';
+                    document.getElementById('color-border-review').value = themeColors.borderReview || '';
+                }
+
+                currentRawHeaderIconUrl = data.rawHeaderIconUrl || data.headerIconUrl || '';
+                currentRawImageUrl = data.rawImageUrl || data.imageUrl || '';
+
+                const headerIconEl = document.getElementById('display-header-icon');
+                if (data.headerIconUrl && data.headerIconUrl.trim() !== '') {
+                    headerIconEl.src = data.headerIconUrl;
+                    headerIconEl.style.display = 'block';
+                } else {
+                    headerIconEl.style.display = 'none';
+                }
+
+                const imgElement = document.getElementById('display-image');
+                if (data.imageUrl && data.imageUrl.trim() !== '') {
+                    imgElement.src = data.imageUrl;
+                    imgElement.style.display = 'block';
+                } else {
+                    imgElement.style.display = 'none';
+                }
+            }
+        } catch (error) {
+            console.error('Error loading data:', error);
+        }
+    }
+
+    async function saveData() {
+        const saveBtn = document.getElementById('save-btn');
+        saveBtn.disabled = true;
+        saveBtn.innerText = 'กำลังบันทึก...';
+
+        const convertedHeaderIconUrl = convertDriveLink(currentRawHeaderIconUrl);
+        const convertedImageUrl = convertDriveLink(currentRawImageUrl);
+        const ratingTitleEl = document.getElementById('display-rating-title');
+
+        const payload = {
+            shopTitle: document.getElementById('display-shop-title').innerText.trim(),
+            headerIconUrl: convertedHeaderIconUrl,
+            rawHeaderIconUrl: currentRawHeaderIconUrl,
+            imageUrl: convertedImageUrl,
+            rawImageUrl: currentRawImageUrl,
+            handle: document.getElementById('display-handle').innerText.trim(),
+            date: document.getElementById('display-date').innerText.trim(),
+            announcement: document.getElementById('display-announcement').innerText.trim(),
+            ratingTitle: ratingTitleEl ? ratingTitleEl.innerText.trim() : 'คะแนนความพึงพอใจ 1 ถึง 5',
+            labelName: document.getElementById('label-name').innerText.trim(),
+            labelImpression: document.getElementById('label-impression').innerText.trim(),
+            labelProfile: document.getElementById('label-profile').innerText.trim(),
+            themeColors: themeColors
+        };
+
+        try {
+            const response = await fetch(FIREBASE_URL, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                showToast('บันทึกข้อมูลเรียบร้อยแล้ว!');
+                document.getElementById('admin-save-bar').style.display = 'none';
+                loadData();
+            } else {
+                showToast('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+            }
+        } catch (error) {
+            console.error('Error saving data:', error);
+            showToast('ไม่สามารถเชื่อมต่อกับ Firebase ได้');
+        } finally {
+            saveBtn.disabled = false;
+            saveBtn.innerText = 'บันทึกข้อมูล';
+        }
+    }
+
+    window.onload = () => {
+        resetRatingCard();
+        loadData();
+        fetchReviews();
+    };
+</script>
+</body>
+</html>
